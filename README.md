@@ -6,7 +6,7 @@
 
 - Built with flexdashboard R package
 - Issues are discovered, pulled in, and parsed using the Github API in conjunction with the `gh` R package.
-- Published via githubpages and a github action workflow file to my custom domain at <github-issue-table.jimbrig.com>.
+- Published via githubpages and a github action workflow file to my custom domain at <https://github-issue-table.jimbrig.com>.
 
 ## Personal Issues
 
