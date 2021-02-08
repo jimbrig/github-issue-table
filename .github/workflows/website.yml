@@ -1,9 +1,19 @@
 on:
+  schedule: 
+    - cron: "0 2 * * 1-5"
+  pull_request:
+    branches: [master, main]
+    paths: 
+      - '**.Rmd'
   push:
+    branches: [master, main]
     paths:
       - '**.Rmd'
+  workflow_dispatch: 
+    paths:
+      - '**.Rmd'    
 
-name: Render Rmarkdown files
+name: Render Rmarkdown
 
 jobs:
   render:
