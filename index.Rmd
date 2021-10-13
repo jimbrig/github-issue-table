@@ -169,8 +169,79 @@ style_labels <- function(x) {
 PERSONAL
 ==============================================
 
-```{r table}
-jimbrig_issues %>%
+```{r table_prep}
+# filter out dependabot
+user_issues_dependabot <- user_issues %>%
+  dplyr::mutate(dependabot = purrr::map(.data$labels, ~purrr::pluck(.x, 1, "name"))) %>%
+  dplyr::filter(.data$dependabot == "dependencies") %>%
+  dplyr::select(-dependabot)
+
+user_issues_out <- user_issues %>%
+  anti_join(user_issues_dependabot)
+
+user_issue_tbl <- user_issues_out %>%
+  reactable(
+    highlight = TRUE,
+    searchable = TRUE,
+    
+    # Stopping long lines of text wrapping to keep table height consistent 
+    wrap = FALSE,
+    
+    # Personally customized to fit my screen size and zoom level 
+    defaultPageSize = 18,
+    minRows = 18,
+    
+    # Sort table by such that most recently updated issue is at the top by default
+    defaultSorted = "updated_at",
+    defaultSortOrder = "desc",
+    
+    # Sets the searchbar to be 100% width
+    theme = reactableTheme(
+      searchInputStyle = list(width = "100%")
+    ),
+    
+    # All columns have Custom Set Name
+    # All but last column have pre-specified width set
+    # Cell modification is done with functions
+    # Columns which uses html formatting have `html = TRUE` to render html
+    columns = list(
+      title = colDef(
+        name = "Title",
+        width = 500,
+        html = TRUE
+        ),
+      repository = colDef(
+        name = "Repository",
+        width = 250,
+        cell = extract_github_url,
+        html = TRUE,
+        ),
+      comments = colDef(
+        name = "Comments",
+        width = 100
+        ),
+      created_at = colDef(
+        name = "Created",
+        width = 120,
+        cell = date_format, 
+        filterable = FALSE
+        ),
+      updated_at = colDef(
+        name = "Updated",
+        width = 120,
+        cell = date_format, 
+        filterable = FALSE
+        ),
+      labels = colDef(
+        name = "Labels",
+        cell = style_labels,
+        html = TRUE,
+        filterable = FALSE
+        )
+      )
+    )
+
+user_dependabot_tbl <- user_issues_dependabot %>%
   reactable(
     highlight = TRUE,
     searchable = TRUE,
@@ -233,11 +304,23 @@ jimbrig_issues %>%
     )
 ```
 
-TYCHORBA
+### User Issues - Excluding Dependabot
+
+```{r user_issue_table}
+user_issue_tbl
+```
+
+### User Issues - Dependabot
+
+```{r user_dependabot_table}
+user_dependabot_tbl
+```
+
+ORGANIZATIONS
 ==============================================
 
 ```{r}
-tychobra_issues %>%
+org_issues %>%
   reactable(
     highlight = TRUE,
     searchable = TRUE,
