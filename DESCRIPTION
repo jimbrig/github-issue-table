@@ -1,4 +1,4 @@
-Package: github-issue-table
+Package: githubissues
 Version: 0.0.0.9000
 Authors@R: 
     person("Jimmy", "Briggs", , "jimmy.briggs@jimbrig.com.", role = c("aut", "cre"),
