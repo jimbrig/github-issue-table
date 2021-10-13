@@ -2,11 +2,11 @@ on:
   schedule: 
     - cron: "0 2 * * 1-5"
   pull_request:
-    branches: [master, main]
+    branches: [master, main, develop]
     paths: 
       - '**.Rmd'
   push:
-    branches: [master, main]
+    branches: [master, main, develop]
     paths:
       - '**.Rmd'
   workflow_dispatch: 
