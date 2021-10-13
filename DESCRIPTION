@@ -1,0 +1,21 @@
+Package: github-issue-table
+Version: 0.0.0.9000
+Authors@R: 
+    person("Jimmy", "Briggs", , "jimmy.briggs@jimbrig.com.", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7489-8787"))
+Encoding: UTF-8
+Language: en-US
+Imports: 
+    tidyverse,
+    emo,
+    farver,
+    flexdashboard,
+    gh,
+    glue,
+    htmltools,
+    knitr,
+    purrr,
+    reactable,
+    sass,
+    stringr,
+    tidyr
