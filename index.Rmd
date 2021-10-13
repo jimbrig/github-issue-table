@@ -1,6 +1,12 @@
 ---
 title: "Github Issue Dashboard"
 author: "Jimmy Briggs"
+params:
+  users: jimbrig
+  orgs: 
+    - jimbrig-work
+    - tychobra
+    - powwater
 output: 
   flexdashboard::flex_dashboard
 ---
@@ -24,21 +30,31 @@ library(farver)
 library(stringr)
 ```
 
-
-
 ```{r repos}
-jimbrig_repos <- gh::gh("/users/jimbrig/repos", .limit = Inf) %>%
-  purrr::map_depth(1, purrr::pluck, "full_name") %>%
-  purrr::map_chr(pluck, 1)
+user_repos <- purrr::map(params$users, function(x) {
+  
+  query <- paste0("/users/", x, "/repos")
+  
+  repos_out <- gh::gh(query, .limit = Inf) %>% 
+    purrr::map_depth(1, purrr::pluck, "full_name") %>%
+    purrr::map_chr(purrr::pluck, 1)
+  
+  repos_out
+}) %>% purrr::flatten_chr()
 
-# add tychobra repos
-tychobra_repos <- gh::gh("/orgs/tychobra/repos", .limit = Inf) %>%
-  purrr::map_depth(1, purrr::pluck, "full_name") %>%
-  purrr::map_chr(purrr::pluck, 1) %>%
-  # filter out any repos with numbers
-  purrr::discard(stringr::str_detect, regex("[:digit:]"))
+org_repos <- purrr::map(params$orgs, function(x) {
+  
+  query <- paste0("/orgs/", x, "/repos")
+  
+  repos_out <- gh::gh(query, .limit = Inf) %>% 
+    purrr::map_depth(1, purrr::pluck, "full_name") %>%
+    purrr::map_chr(purrr::pluck, 1) %>%
+    purrr::discard(stringr::str_detect, regex("[:digit:]"))
+  
+  repos_out
+}) %>% purrr::flatten_chr()
 
-repos <- c(jimbrig_repos, tychobra_repos)
+repos <- c(user_repos, org_repos)
 ```
 
 ```{r parsing}
@@ -81,12 +97,12 @@ issue_summary <- function(x) {
 
 ```{r, download}
 # Download all issues
-jimbrig_issues <- all_issues(jimbrig_repos) %>%
+user_issues <- all_issues(user_repos) %>%
   # Combine issue_url and title
   mutate(title = glue('<a href="{issue_url}">{title}</a>')) %>%
   select(-issue_url)
 
-tychobra_issues <- all_issues(tychobra_repos) %>%
+org_issues <- all_issues(org_repos) %>%
   # Combine issue_url and title
   mutate(title = glue('<a href="{issue_url}">{title}</a>')) %>%
   select(-issue_url)
