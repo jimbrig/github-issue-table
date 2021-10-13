@@ -28,6 +28,10 @@ library(emo)
 library(htmltools)
 library(farver)
 library(stringr)
+
+require(flexdashboard)
+require(sass)
+require(tidyr)
 ```
 
 ```{r repos}
