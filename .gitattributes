@@ -1,0 +1,4 @@
+# gitHub-linguist
+# ignore HTML, and JS
+*.html linguist-vendored
+*.js linguist-vendored
